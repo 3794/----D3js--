@@ -150,12 +150,12 @@ for (; i < dataLength; ++i) {
 EnterNode가 생성된 결과는 아래와 같습니다.
 ```
 selection {
-   _enter: [
+    _enter: [
         [EnterNode { __data__: 5  }],
         [EnterNode { __data__: 10 }],
-      [EnterNode { __data__: 15 }],
-      [EnterNode { __data__: 20 }],
-      [EnterNode { __data__: 25 }],        
+        [EnterNode { __data__: 15 }],
+        [EnterNode { __data__: 20 }],
+        [EnterNode { __data__: 25 }],        
     ],
     _groups: [
       [],[],[],[],[]
@@ -170,9 +170,9 @@ Selection {
     _groups: [
         [EnterNode { __data__: 5  }],
         [EnterNode { __data__: 10 }],
-      [EnterNode { __data__: 15 }],
-      [EnterNode { __data__: 20 }],
-      [EnterNode { __data__: 25 }],        
+        [EnterNode { __data__: 15 }],
+        [EnterNode { __data__: 20 }],
+        [EnterNode { __data__: 25 }],        
     ],
     _parents: [
       body
