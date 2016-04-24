@@ -179,7 +179,7 @@ Selection {
     ]
 }
 ```
-이제 _group 과 _parents 만 있는 데이터가 바인딩된 기본 selection이 만들어 졌습니다. 앞에서 실습한대로 append() 메소드나 text() 메소드를 사용할 수 있습니다.
+이제 _group 과 _parents 만 있는, 데이터가 바인딩된 기본 selection이 만들어 졌습니다. 앞에서 실습한대로 append() 메소드나 text() 메소드를 사용할 수 있습니다.
 
 데이터 바인딩 전체 코드를 다시 보겠습니다.
 ```
@@ -250,18 +250,93 @@ bar 차트를 만들기 위해 div의 높이를 조정합니다.
 });
 ```
 ##An SVG primer
+지금까지 D3를 이용해서 div 엘리먼트를 생성하고 조작하는법을 알아보았습니다. 그러나 native HTML을 다루는데 굳이 D3를 이용할 필요는 없겠죠. 이제 본론으로 들어가서 SVG를 다루어 보겠습니다.
+canvas처럼 SVG 엘리먼트를 먼저 만들어야 합니다.
 ```
 <svg width="500" height="50">
    something
 </svg>
 ```
 
+###Simple Shapes
+svg 엘리먼트 안에 그려 넣을 visual element 를 넣으면 됩니다.
+rect, circle, elipse, line, text, path가 있습니다.
+
+먼저 사각형을 그려 봅시다.
 ```
 <svg width="500" height="50">
    <rect x="0" y="0" width="500" height="50"/>
 </svg>
-
 ```
+원을 그려 봅시다.
+cx, cy는 원의 센터 좌표값 입니다. r은 반지름.
+```
+<circle cx="250" cy="25" r="25"/>
+```
+
+타원도 원과 비슷하지만 rx, ry로 각각의 반지름을 정해야 합니다
+```
+<ellipse cx="250" cy="25" rx="100" ry="25"/>
+```
+
+라인은 시작점의 좌표와 끝점의 좌표가 필요합니다.
+```
+<line x1="0" y1="0" x2="500" y2="50" stroke="black"/>
+```
+텍스트에서 x는 글자의 왼쪽끝이며 y는 글자의 baseline virtical position입니다.
+```
+<text x="250" y="25">Easy-peasy</text>
+```
+텍스트는 css style도 입힐 수 있습니다.
+```
+<text x="250" y="25" font-family="sans-serif"
+ font-size="25" fill="gray">Easy-peasy</text>
+```
+###Styling SVG Elements
+SVG의 기본 스타일은 블랙, fill with no stroke 입니다. 다른 스타일을 입혀보도록 하죠.
+
+공통 프로퍼티:
+* fill 
+ * named colors - orange
+ * hex vlaues - #3388aa
+ * RGB values - rgb(10, 150, 20)
+ * RGB with alpha transparency - rgba(10, 150, 20, 0.5)
+
+* stroke
+* stroke-with
+* opecity
+
+text 프로퍼티:
+* font-family
+* font-size
+
+먼저 inline 으로 스타일을 입히는 방법입니다.
+```
+<circle cx="25" cy="25" r="22" fill="yellow" stroke="orange" stroke-width="5"/>
+```
+클래스를 설정해서 스타일을 입히는 방법입니다.
+```
+.pumpkin {
+    fill: yellow;
+    stroke: orange;
+    stroke-width: 5;
+ }
+<circle cx="25" cy="25" r="22" class="pumpkin"/>
+```
+
+###Layering and Drawing Order
+SVG에는 layer 개념은 없습니다. CSS의 z-index를 지원하지 않습니다. 오직 x/y 평면으로만 정렬됩니다.
+그래서 여러 도형을 그렸을때 겹치게 되는데 DOM 엘리먼트처럼 코드 순서대로 위로 겹쳐진다.
+```
+<rect x="0" y="0" width="30" height="30" fill="purple"/>
+<rect x="20" y="5" width="30" height="30" fill="blue"/>
+<rect x="40" y="10" width="30" height="30" fill="green"/>
+<rect x="60" y="15" width="30" height="30" fill="yellow"/>
+<rect x="80" y="20" width="30" height="30" fill="red"/>
+```
+
+###Transparency
+투명도를 조절할 수 있습니다.
 ```
 <circle cx="25" cy="25" r="20" fill="rgba(128, 0, 128, 1.0)"/>
 <circle cx="50" cy="25" r="20" fill="rgba(0, 0, 255, 0.75)"/>
@@ -269,7 +344,79 @@ bar 차트를 만들기 위해 div의 높이를 조정합니다.
 <circle cx="100" cy="25" r="20" fill="rgba(255, 255, 0, 0.25)"/>
 <circle cx="125" cy="25" r="20" fill="rgba(255, 0, 0, 0.1)"/>
 ```
+참고
+http://alignedleft.com/tutorials/d3/an-svg-primer
 
+##Drawing SVGs
+이제 SVG 와 친숙해 졌으니 데이터를 이용해서 모형을 생성해 봅시다.
+
+```
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width", 500)
+            .attr("height", 50);
+```
+
+###Data-driven Shapes
+```
+var dataset = [ 5, 10, 15, 20, 25 ];
+```
+```
+var w = 500;
+var h = 50;
+var dataset = [ 5, 10, 15, 20, 25 ];
+
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width", w)   // <-- Here
+            .attr("height", h); // <-- and here!
+
+```
+```
+var circles = svg.selectAll("circle")
+                 .data(dataset)
+                 .enter()
+                 .append("circle");
+
+circles.attr("cx", function(d, i) {
+            return (i * 50) + 25;
+        })
+       .attr("cy", h/2)
+       .attr("r", function(d) {
+            return d;
+       });
+```
+![](./images/data_driven_Shapes.png) 
+    
+```
+.attr("fill", "yellow")
+.attr("stroke", "orange")
+.attr("stroke-width", function(d) {
+    return d/2;
+});
+```
+![](./images/data_driven_Shapes2.png) 
+
+
+##Making a bar chart
+bar 차트를 만들어 봅시다. 앞에서 div 엘리먼트로 만들었던 bar 차트 입니다. 
+```
+var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+                11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+
+d3.select("body").selectAll("div")
+    .data(dataset)
+    .enter()
+    .append("div")
+    .attr("class", "bar")
+    .style("height", function(d) {
+        var barHeight = d * 5;
+        return barHeight + "px";
+    });
+```
+![](./images/oldchart.png) 
+
+이제 SVG로 만들어 봅시다.
 다음에 계속...
 
 
