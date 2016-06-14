@@ -1,9 +1,7 @@
 #개발자를 위한 D3.js 입문
 
 ##Intro
-d3.js 학습을 위한 한글 문서가 부족한것 같아 이 문서를 만듦.
-기본적으로 http://alignedleft.com/tutorials/d3 에 나와있는 글들을 편집해서 작성. 참고로 그외 추가한 글도 섞여 있음. 잘못된 정보가 있으면 알려주시면 감사하겠습니다.
-책으로도 나와있고 국내 번역본도 있는데 직접 본적이 없어서 어떻게 번역되어 있는지는 모름.
+http://alignedleft.com/tutorials/d3 의글을 기본으로 주석을 추가함
 
 
 ##fundamentals
