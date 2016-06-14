@@ -1,7 +1,7 @@
 #개발자를 위한 D3.js 입문
 
 ##Intro
-http://alignedleft.com/tutorials/d3 의글을 기본으로 주석을 추가함
+http://alignedleft.com/tutorials/d3 의 글을 기본으로 주석을 추가함
 
 
 ##fundamentals
@@ -324,7 +324,7 @@ text 프로퍼티:
 
 ###Layering and Drawing Order
 SVG에는 layer 개념은 없습니다. CSS의 z-index를 지원하지 않습니다. 오직 x/y 평면으로만 정렬됩니다.
-그래서 여러 도형을 그렸을때 겹치게 되는데 DOM 엘리먼트처럼 코드 순서대로 위로 겹쳐진다.
+그래서 여러 도형을 그렸을때 겹치게 되는데 DOM 엘리먼트처럼 코드 순서대로 위로 겹쳐집니다.
 ```
 <rect x="0" y="0" width="30" height="30" fill="purple"/>
 <rect x="20" y="5" width="30" height="30" fill="blue"/>
